@@ -2,15 +2,17 @@
 
 buildscript {
     repositories {
+        google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath('com.android.tools.build:gradle:4.1.0')
     }
 }
 
 allprojects {
     repositories {
+        google()
         jcenter()
         maven {
             url "$projectDir/../node_modules/react-native/android"
@@ -24,13 +26,13 @@ allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 29
+    buildToolsVersion = "29.0.3"
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 1
+        targetSdkVersion 29
+        versionCode 2
         versionName "1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -42,6 +44,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.facebook.react:react-native:+'
-    implementation 'com.brightcove.player:exoplayer2:6.8.0'
+    implementation 'com.facebook.react:react-native:0.20.1'
+    implementation 'com.brightcove.player:exoplayer2:6.16.0'
 }

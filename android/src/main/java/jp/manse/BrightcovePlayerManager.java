@@ -1,6 +1,6 @@
 package jp.manse;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -40,8 +40,7 @@ public class BrightcovePlayerManager extends SimpleViewManager<BrightcovePlayerV
 
     @Override
     public BrightcovePlayerView createViewInstance(ThemedReactContext ctx) {
-        BrightcovePlayerView brightcovePlayerView = new BrightcovePlayerView(ctx, applicationContext);
-        return brightcovePlayerView;
+        return new BrightcovePlayerView(ctx, applicationContext);
     }
 
     @ReactProp(name = "policyKey")
