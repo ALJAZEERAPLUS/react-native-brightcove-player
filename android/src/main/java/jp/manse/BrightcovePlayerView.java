@@ -32,30 +32,25 @@ import com.google.android.exoplayer2.RendererCapabilities;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.FixedTrackSelection;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class BrightcovePlayerView extends RelativeLayout implements LifecycleEventListener {
-    private ThemedReactContext context;
-    private ReactApplicationContext applicationContext;
-    private BrightcoveExoPlayerVideoView playerVideoView;
-    private BrightcoveMediaController mediaController;
+    private final ThemedReactContext context;
+    private final ReactApplicationContext applicationContext;
+    private final BrightcoveExoPlayerVideoView playerVideoView;
+    private final BrightcoveMediaController mediaController;
     private String policyKey;
     private String accountId;
     private String videoId;
     private String referenceId;
     private String videoToken;
-    private Catalog catalog;
-    private OfflineCatalog offlineCatalog;
     private boolean autoPlay = true;
     private boolean playing = false;
     private int bitRate = 0;
     private float playbackRate = 1;
-    private static final TrackSelection.Factory FIXED_FACTORY = new FixedTrackSelection.Factory();
 
     public BrightcovePlayerView(ThemedReactContext context, ReactApplicationContext applicationContext) {
         super(context);
@@ -298,14 +293,17 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     }
 
     private void loadVideo() {
+        if (null == this.accountId) {
+            return;
+        }
         if (this.videoToken != null && !this.videoToken.equals("")) {
-            this.offlineCatalog = new OfflineCatalog(this.context, this.playerVideoView.getEventEmitter(), this.accountId, this.policyKey);
+            OfflineCatalog offlineCatalog = new OfflineCatalog(this.context, this.playerVideoView.getEventEmitter(), this.accountId, this.policyKey);
             try {
-                Video video = this.offlineCatalog.findOfflineVideoById(this.videoToken);
+                Video video = offlineCatalog.findOfflineVideoById(this.videoToken);
                 if (video != null) {
                     playVideo(video);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             return;
         }
@@ -315,11 +313,15 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 playVideo(video);
             }
         };
-        this.catalog = new Catalog(this.playerVideoView.getEventEmitter(), this.accountId, this.policyKey);
+        Catalog.Builder builder = new Catalog.Builder(this.playerVideoView.getEventEmitter(), this.accountId);
+        if (this.policyKey != null) {
+            builder.setPolicy(this.policyKey);
+        }
+        Catalog catalog = builder.build();
         if (this.videoId != null) {
-            this.catalog.findVideoByID(this.videoId, listener);
+            catalog.findVideoByID(this.videoId, listener);
         } else if (this.referenceId != null) {
-            this.catalog.findVideoByReferenceID(this.referenceId, listener);
+            catalog.findVideoByReferenceID(this.referenceId, listener);
         }
     }
 

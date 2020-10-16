@@ -26,7 +26,7 @@ public class BrightcovePlayerManager extends SimpleViewManager<BrightcovePlayerV
     public static final String EVENT_CHANGE_DURATION = "change_duration";
     public static final String EVENT_UPDATE_BUFFER_PROGRESS = "update_buffer_progress";
 
-    private ReactApplicationContext applicationContext;
+    private final ReactApplicationContext applicationContext;
 
     public BrightcovePlayerManager(ReactApplicationContext context) {
         super();
